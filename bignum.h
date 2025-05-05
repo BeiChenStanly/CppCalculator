@@ -2,9 +2,10 @@
 #define BIGNUM_H
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include <compare>
+#include <cstdint>
 #include <deque>
 #include <string>
-#include <cstdint>
 class BigNum
 {
 private:
@@ -23,11 +24,11 @@ public:
     const long long& GetExponent()const;
     const size_t GetSize()const;
     std::string ToFloatFormart();
+    std::strong_ordering operator<=>(const BigNum& rhs) const;
     BigNum operator+(const BigNum& rhs)const;
     BigNum operator-(const BigNum& rhs)const;
     BigNum operator*(const BigNum& rhs)const;
     BigNum operator/(const BigNum& rhs)const;
     BigNum operator%(const BigNum& rhs)const;
 };
-
 #endif // BIGNUM_H

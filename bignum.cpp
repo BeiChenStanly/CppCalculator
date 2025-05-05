@@ -18,9 +18,9 @@ void BigNum::normalize()//标准化，即处理前后导0，使1.1451400e2变成
         isNegative = false;
     }
 }
-void BigNum::alignexponent(BigNum& a,BigNum& b)//后面添0以对齐指数
+void BigNum::alignexponent(BigNum& a,BigNum& b)//让两个数完全对齐
 {
-    while (a.exponent < b.exponent) {
+    while (a.exponent < b.exponent) {//后面添0
         a.digits.push_back(0);
         a.exponent++;
     }
@@ -28,7 +28,7 @@ void BigNum::alignexponent(BigNum& a,BigNum& b)//后面添0以对齐指数
         b.digits.push_back(0);
         b.exponent++;
     }
-    while (a.GetSize() < b.GetSize())
+    while (a.GetSize() < b.GetSize())//前面添0
     {
         a.digits.push_front(0);
     }
@@ -37,7 +37,7 @@ void BigNum::alignexponent(BigNum& a,BigNum& b)//后面添0以对齐指数
         b.digits.push_front(0);
     }
 }
-BigNum::BigNum()
+BigNum::BigNum()//默认构造为0
 {
     isNegative = 0;
     exponent = 0;
@@ -128,7 +128,29 @@ BigNum::operator std::string()
     }
     ss << "×10^" << (exponent < 0 ? "(" : "") << exponent << (exponent < 0 ? ")" : "");
     return ss.str();
-}BigNum BigNum::operator+(const BigNum& rhs)const
+}
+std::strong_ordering BigNum::operator<=>(const BigNum &rhs) const//三相比较运算符(C++20)
+{
+    if (isNegative != rhs.isNegative)
+    {
+        return rhs.isNegative <=> isNegative;
+    }
+    else
+    {
+        BigNum a(*this);
+        BigNum b(rhs);
+        alignexponent(a, b);
+        for (size_t i = 0; i < a.GetSize(); ++i)
+        {
+            if (a[i] != b[i])
+            {
+                return a[i] <=> b[i];
+            }
+        }
+        return std::strong_ordering::equal;
+    }
+}
+BigNum BigNum::operator+(const BigNum &rhs) const
 {
     if (isNegative == rhs.isNegative)//同号逻辑
     {
@@ -172,12 +194,58 @@ BigNum::operator std::string()
 }
 BigNum BigNum::operator-(const BigNum& rhs)const
 {
-    return BigNum();//TODO
+    if (isNegative != rhs.isNegative)//异号减法转换为加法
+    {
+        if (isNegative)
+        {
+            BigNum copy = (*this);
+            copy.isNegative = false;
+            BigNum result = rhs + copy;
+            result.isNegative = true;
+            return result;
+        }
+        else
+        {
+            BigNum copy = rhs;
+            copy.isNegative = false;
+            BigNum result = copy + (*this);
+            return result;
+        }
+    }
+    else
+    {//同号减法转化为大减小，再确定符号
+        BigNum maxnum,minnum;//差直接在maxnum上构建
+        if ((*this) >= rhs)
+        {
+            maxnum = (*this);
+            minnum = rhs;
+            maxnum.isNegative = false;
+        }
+        else
+        {
+            minnum = (*this);
+            maxnum = rhs;
+            maxnum.isNegative = true;
+        }
+        alignexponent(maxnum, minnum);
+        for (size_t i = 0;i < maxnum.digits.size();++i)
+        {
+            maxnum.digits[i] -= minnum.digits[i];
+            if (maxnum.digits[i] < 0)
+            {
+                maxnum.digits[i] += 10;
+                --maxnum.digits[i + 1];
+            }
+        }
+        maxnum.normalize();
+        return maxnum;
+    }
 }
 std::string BigNum::ToFloatFormart()
 {
     std::stringstream ss;
-    if(exponent<0)
+    if(isNegative) ss <<'-';//符号
+    if(exponent<0)//指数小于0，需要在前面添0
     {
         ss << "0.";
         for(long long i=1;i<-exponent;++i)
@@ -189,15 +257,15 @@ std::string BigNum::ToFloatFormart()
             ss<<(*this)[i];
         }
     }
-    else
+    else//指数大于等于0，需要在后面添0
     {
         for(long long i=0;i<exponent+1;++i)
         {
             if(i<digits.size()) ss<<(*this)[i];
-            else ss<<'0';
+            else ss<<'0';//这个是末尾为几个0的大整数，如114514000
         }
         ss<<'.';
-        if(digits.size()>exponent+1)
+        if(digits.size()>exponent+1)//小数部分
         {
             for(long long i=exponent+1;i<digits.size();++i)
             {
