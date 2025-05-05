@@ -17,6 +17,8 @@ public:
     ~MainWindow();
 private slots:
     void handleCalculate();
+    void handleSlide();
+    void handleSlideFinished();
 private:
     Ui::MainWindow *ui;
 };

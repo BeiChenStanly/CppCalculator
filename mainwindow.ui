@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>629</width>
+    <height>319</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,50 +17,107 @@
    <widget class="QLineEdit" name="input">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>120</y>
-      <width>801</width>
-      <height>31</height>
+      <x>60</x>
+      <y>60</y>
+      <width>401</width>
+      <height>41</height>
      </rect>
     </property>
    </widget>
    <widget class="QPushButton" name="calcButton">
     <property name="geometry">
      <rect>
-      <x>350</x>
-      <y>160</y>
+      <x>490</x>
+      <y>70</y>
       <width>75</width>
-      <height>24</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
      <string>计算</string>
     </property>
    </widget>
-   <widget class="QLabel" name="resultLabel">
+   <widget class="QLabel" name="titleLabel">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>200</y>
-      <width>801</width>
-      <height>31</height>
+      <x>170</x>
+      <y>20</y>
+      <width>358</width>
+      <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>结果</string>
+     <string>科学计算器v0.0.1（目前只支持+-*/，且表达式中只能有一个运算）</string>
+    </property>
+   </widget>
+   <widget class="QSlider" name="precisionSlider">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>250</y>
+      <width>160</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>精度设置</string>
+    </property>
+    <property name="maximum">
+     <number>50</number>
+    </property>
+    <property name="value">
+     <number>20</number>
+    </property>
+    <property name="sliderPosition">
+     <number>20</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Orientation::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="precisionLabel">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>250</y>
+      <width>101</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>精度设置：20</string>
     </property>
    </widget>
    <widget class="QLabel" name="formatLabel">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>250</y>
-      <width>801</width>
-      <height>31</height>
+      <x>50</x>
+      <y>180</y>
+      <width>551</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string>结果</string>
+     <string>结果（正常数字记法）</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="resultLabel">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>130</y>
+      <width>561</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>结果（科学计数法）</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>
@@ -69,7 +126,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>629</width>
      <height>22</height>
     </rect>
    </property>
